@@ -8,7 +8,9 @@
         <title>Document</title>
     </head>
     <body>
-        <button id="fetchBt">fetch</button>
+        <button id="fetchBt">fetch store</button>
+        <button id="fetchUpdateBt">fetch update</button>
+        <button id="fetchDeleteBt">fetch delete</button>
     </body>
     <script>
         let csrf_token = document.querySelector('meta[name="csrf-token"]').content
@@ -27,6 +29,39 @@
                         'price': 0.35
                     })
                 }).
+            then(response => response.json()).
+            then(data => {
+                console.log(data)
+            });
+        });
+        let fetchUpdateBt = document.getElementById('fetchUpdateBt')
+        fetchUpdateBt.addEventListener('click', (event) => {
+            fetch(url_base + '/product/1', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf_token
+                },
+                body: JSON.stringify({
+                        'name': 'cebolla',
+                        'price': 1.78
+                    })
+                }).
+            then(response => response.json()).
+            then(data => {
+                console.log(data)
+            });
+        });
+        let fetchDeleteBt = document.getElementById('fetchDeleteBt')
+        fetchDeleteBt.addEventListener('click', (event) => {
+            fetch(url_base + '/product/3', {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrf_token
+                }}).
             then(response => response.json()).
             then(data => {
                 console.log(data)
