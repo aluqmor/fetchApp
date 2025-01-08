@@ -172,6 +172,15 @@
                     }*/
                     const {id, name, price} = element //destructuring assignment
                     div.textContent = id + ' ' + name + ' ' + price;
+                    const buttonView = document.createElement('button');
+                    buttonView.textContent = 'View'
+                    const buttonEdit = document.createElement('button');
+                    buttonEdit.textContent = 'Edit'
+                    const buttonDelete = document.createElement('button');
+                    buttonDelete.textContent = 'Delete'
+                    div.appendChild(buttonView);
+                    div.appendChild(buttonEdit);
+                    div.appendChild(buttonDelete);
                     content.appendChild(div);
                 });
             }
