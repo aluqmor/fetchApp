@@ -79,19 +79,19 @@ class ProductController extends Controller {
         return response()->json(['result' => $result, 'message' => $message]);
     }
 
-    public function destroy(Product $product) {
-        $message = '';
+    public function destroy($id) {
         $product = Product::find($id);
+        $message = '';
         $result = false;
         if($product != null) {
             try {
-                $product->delete();
-            } catch(\Exception $e){
+                $result = $product->delete();
+            } catch(\Exception $e) {
                 $message = $e->getMessage();
             }
         } else {
             $message = 'Product not found';
-        } 
+        }
         return response()->json(['result' => $result, 'message' => $message]);
     }
 }

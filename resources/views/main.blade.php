@@ -165,22 +165,64 @@
 
             const renderFetchData = (data) => {
                 console.log(data)
+
+                const buttonCreate = document.createElement('button')
+                buttonCreate.textContent = 'create'
+                buttonCreate.setAttribute('data-bs-toggle', 'modal');
+                buttonCreate.setAttribute('data-bs-target', '#createModal');
+                buttonCreate.classList.add('btn', 'btn-success');
+                buttonCreate.dataset.url = "/product";
+                buttonCreate.dataset.method = "post";
+                content.appendChild(buttonCreate);
+
                 data.products.forEach(element => {
                     const div = document.createElement('div');
                     /*for (const key in element) {
                         div.textContent = element[key];
                     }*/
                     const {id, name, price} = element //destructuring assignment
-                    div.textContent = id + ' ' + name + ' ' + price;
-                    const buttonView = document.createElement('button');
-                    buttonView.textContent = 'View'
-                    const buttonEdit = document.createElement('button');
-                    buttonEdit.textContent = 'Edit'
-                    const buttonDelete = document.createElement('button');
-                    buttonDelete.textContent = 'Delete'
-                    div.appendChild(buttonView);
-                    div.appendChild(buttonEdit);
-                    div.appendChild(buttonDelete);
+                    div.textContent = id + ' ' + name + ' ' + price
+
+                    const buttonView = document.createElement('button')
+                    buttonView.textContent = 'view'
+                    //class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    buttonView.setAttribute('data-bs-toggle', 'modal');
+                    buttonView.setAttribute('data-bs-target', '#viewModal');
+                    buttonView.classList.add('btn', 'btn-primary');
+                    buttonView.dataset.id = id;
+                    buttonView.dataset.name = name;
+                    buttonView.dataset.value = price;
+                    buttonView.dataset.url = "/product/" + id;
+                    buttonView.dataset.method = "get";
+
+                    const buttonEdit = document.createElement('button')
+                    buttonEdit.textContent = 'edit'
+                    buttonEdit.setAttribute('data-bs-toggle', 'modal');
+                    buttonEdit.setAttribute('data-bs-target', '#editModal');
+                    buttonEdit.classList.add('btn', 'btn-warning');
+                    buttonEdit.dataset.id = id;
+                    buttonEdit.dataset.name = name;
+                    buttonEdit.dataset.value = price;
+                    buttonEdit.dataset.url = "/product/" + id;
+                    buttonEdit.dataset.method = "put";
+
+
+
+                    const buttonDelete = document.createElement('button')
+                    buttonDelete.textContent = 'delete'
+                    buttonDelete.setAttribute('data-bs-toggle', 'modal');
+                    buttonDelete.setAttribute('data-bs-target', '#deleteModal');
+                    buttonDelete.classList.add('btn', 'btn-danger');
+                    buttonDelete.dataset.id = id;
+                    buttonDelete.dataset.name = name;
+                    buttonDelete.dataset.value = price;
+                    buttonDelete.dataset.url = "/product/" + id;
+                    buttonDelete.dataset.method = "delete";
+
+                    div.appendChild(buttonView)
+                    div.appendChild(buttonEdit)
+                    div.appendChild(buttonDelete)
+                    
                     content.appendChild(div);
                 });
             }
