@@ -15,6 +15,7 @@ export default class PageItem {
         }
         if(link.url) {
             tag = document.createElement('a');
+            tag.setAttribute('href', '#');
         } else {
             tag = document.createElement('span');
             tag.classList.add('disabled');

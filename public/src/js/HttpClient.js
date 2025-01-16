@@ -5,13 +5,11 @@ export default class HttpClient {
         this.csrfToken = csrfToken;
     }
 
-    request(url, method = 'GET', callBack, parameters = {}, headers = {}) {
+    request(url, method = 'GET', parameters = {}, headers = {}, callBack) {
         const fullUrl = this.baseUrl + url;
         if (method !== 'GET') {
             headers['X-CSRF-Token'] = this.csrfToken;
         }
-        //const cleanUrl = url.replace(this.baseUrl, '');
-        //const fullUrl = this.baseUrl + cleanUrl;
         const options = {
             method,
             headers: {
@@ -37,19 +35,19 @@ export default class HttpClient {
             })
     }
 
-    delete(url, callBack) {
-        this.request(url, 'DELETE', callBack);
+    delete(url, parameters = {}, callBack) {
+        this.request(url, 'DELETE', parameters, {}, callBack);
     }
 
     get(url, parameters = {}, callBack) {
-        this.request(url, 'GET', callBack, parameters);
+        this.request(url, 'GET', parameters, {}, callBack);
     }
 
     post(url, parameters = {}, callBack) {
-        this.request(url, 'POST', callBack, parameters);
+        this.request(url, 'POST', parameters, {}, callBack);
     }
 
     put(url, parameters = {}, callBack) {
-        this.request(url, 'PUT', callBack, parameters);
+        this.request(url, 'PUT', parameters, {}, callBack);
     }
 }

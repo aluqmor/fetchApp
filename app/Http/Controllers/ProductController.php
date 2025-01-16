@@ -12,10 +12,6 @@ class ProductController extends Controller {
         return view('main');
     }
 
-    // function fetch() {
-    //     return view('fetch');
-    // }
-
     public function index() {
         return response()->json([
             'products' => Product::orderBy('name')->paginate(10)
@@ -39,7 +35,7 @@ class ProductController extends Controller {
             $object = new Product($request->all());
             try {
                 $result = $object->save();
-                $products = Product::orderBy('name')->paginate(10);
+                $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
             } catch(\Exception $e) {
                 $result = false;
                 $message = $e->getMessage();
@@ -76,7 +72,7 @@ class ProductController extends Controller {
             if($validator->passes()) {
                 try {
                     $result = $product->update($request->all());
-                    $products = Product::orderBy('name')->paginate(10);
+                    $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
                 } catch(\Exception $e) {
                     $message = $e->getMessage();
                 }
@@ -89,16 +85,21 @@ class ProductController extends Controller {
         return response()->json(['result' => $result, 'message' => $message, 'products' => $products]);
     }
 
-    public function destroy($id) {
-        $product = Product::find($id);
+    public function destroy(Request $request, $id) {
         $message = '';
         $products = [];
+        $product = Product::find($id);
         $result = false;
         if($product != null) {
             try {
                 $result = $product->delete();
-                // $products = Product::orderBy('name')->get();
-                $products = Product::orderBy('name')->paginate(10);
+                //$page = $request->query('page', 1);
+                //$products = Product::orderBy('name')->paginate(10, ['*'], 'page', $page)->setPath(url('product'));
+                $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
+                if($products->isEmpty()) {
+                    $page = $products->lastPage();//$page - 1;
+                    $products = Product::orderBy('name')->paginate(10, ['*'], 'page', $page)->setPath(url('product'));
+                }
             } catch(\Exception $e) {
                 $message = $e->getMessage();
             }
@@ -106,9 +107,9 @@ class ProductController extends Controller {
             $message = 'Product not found';
         }
         return response()->json([
-            'result' => $result, 
-            'message' => $message, 
-            'products' => $products
+            'message' => $message,
+            'products' => $products,
+            'result' => $result
         ]);
     }
 }
