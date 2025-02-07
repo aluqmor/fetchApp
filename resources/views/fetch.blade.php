@@ -10,7 +10,7 @@
     <body>
         <button id="fetchBt">fetch store</button>
         <button id="fetchUpdateBt">fetch update</button>
-        <button id="fetchDeleteBt">fetch delete</button>
+        <button id="fetchDeleteBt">fetch destroy</button>
     </body>
     <script>
         let csrf_token = document.querySelector('meta[name="csrf-token"]').content
@@ -36,7 +36,7 @@
         });
         let fetchUpdateBt = document.getElementById('fetchUpdateBt')
         fetchUpdateBt.addEventListener('click', (event) => {
-            fetch(url_base + '/product/1', {
+            fetch(url_base + '/product/3', {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -61,7 +61,8 @@
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'X-CSRF-Token': csrf_token
-                }}).
+                }
+            }).
             then(response => response.json()).
             then(data => {
                 console.log(data)

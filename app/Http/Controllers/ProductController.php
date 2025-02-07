@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller {
@@ -12,9 +13,10 @@ class ProductController extends Controller {
         return view('main');
     }
 
-    public function index() {
+    public function index(Request $request) {
         return response()->json([
-            'products' => Product::orderBy('name')->paginate(10)
+            'products' => Product::orderBy('name')->paginate(10),
+            'user' => Auth::user()
         ]);
     }
 
@@ -30,15 +32,16 @@ class ProductController extends Controller {
             'name'  => 'required|unique:product|max:100|min:2',
             'price' => 'required|numeric|gte:0|lte:100000',
         ]);
+        // $validator->passes(), $validator->fails()
         if ($validator->passes()) {
             $message = '';
-            $object = new Product($request->all());
-            try {
-                $result = $object->save();
+            //$product = new Product($request->all());
+            //$result = $product->store();
+            $result = Product::change($request);
+            if($result) {
                 $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
-            } catch(\Exception $e) {
-                $result = false;
-                $message = $e->getMessage();
+            } else {
+                $message = 'Message product has not been saved.';
             }
         } else {
             $result = false;
@@ -70,11 +73,11 @@ class ProductController extends Controller {
                 'price' => 'required|numeric|gte:0|lte:100000',
             ]);
             if($validator->passes()) {
-                try {
-                    $result = $product->update($request->all());
+                $result = $product->modify($request);
+                if($result) {
                     $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
-                } catch(\Exception $e) {
-                    $message = $e->getMessage();
+                } else {
+                    $message = 'Product has not been updated.';
                 }
             } else {
                 $message = $validator->getMessageBag();
@@ -98,7 +101,9 @@ class ProductController extends Controller {
                 $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
                 if($products->isEmpty()) {
                     $page = $products->lastPage();//$page - 1;
-                    $products = Product::orderBy('name')->paginate(10, ['*'], 'page', $page)->setPath(url('product'));
+                    $request->merge(['page' => $page]);
+                    $products = Product::orderBy('name')->paginate(10)->setPath(url('product'));
+                    //$products = Product::orderBy('name')->paginate(10, ['*'], 'page', $page)->setPath(url('product'));
                 }
             } catch(\Exception $e) {
                 $message = $e->getMessage();
